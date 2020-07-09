@@ -1,0 +1,29 @@
+version: "3"
+
+services: 
+    api:
+        image: cost_tracker/cost_tracker_api
+        container_name: cost_tracke_api
+        build: 
+            context: .
+            dockerfile: dockerfile
+        ports: 
+            - "5000:5000"
+        depends_on: 
+            - database
+            - storage
+    
+    database:
+        image: mcr.microsoft.com/mssql/server
+        hostname: sql-server
+        container_name: cost_tracke_sql_server
+        ports: 
+            - "1433:1433"
+        environment:
+            - ACCEPT_EULA=Y
+    
+    storage:
+        image: mcr.microsoft.com/azure-storage/azurite
+        container_name: cost_tracke_blob_storage
+        ports: 
+            - "10000:10000"
