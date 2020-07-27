@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CostTracker.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/parts/{partId}/costs")]
     [ApiController]
     public class CostController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CostDTO>>> GetAll([FromQuery] string partId)
+        public async Task<ActionResult<List<CostDTO>>> GetAll([FromRoute] string partId)
         {
             var dtos = await _mediator.Send(new GetAllCostsQuery { PartExternalId = partId });
 
@@ -32,7 +32,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromQuery] string partId, [FromForm] CostDTO cost, IFormFile invoice)
+        public async Task<IActionResult> Add([FromRoute] string partId, [FromForm] CostDTO cost, IFormFile invoice)
         {
             await _mediator.Send(new CreateCostCommand
             {
@@ -40,8 +40,8 @@ namespace CostTracker.Api.Controllers
                 Name = cost.Name,
                 VatRate = cost.VatRate,
                 PartExternalId = partId,
-                File = invoice.OpenReadStream(),
-                FileName = Path.GetInvalidFileNameChars().Aggregate(invoice.FileName, (currentFileName, invalidCharacter) => currentFileName.Replace(invalidCharacter.ToString(), ""))
+                File = invoice?.OpenReadStream(),
+                FileName = invoice != null ? Path.GetInvalidFileNameChars().Aggregate(invoice.FileName, (currentFileName, invalidCharacter) => currentFileName.Replace(invalidCharacter.ToString(), "")) : null
             });
 
             return Ok();

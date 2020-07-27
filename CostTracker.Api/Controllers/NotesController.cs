@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CostTracker.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/buildings/{buildingId}/notes")]
     [ApiController]
     public class NotesController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<NoteDTO>>> GetAll([FromQuery] string buildingId)
+        public async Task<ActionResult<List<NoteDTO>>> GetAll([FromRoute] string buildingId)
         {
             var dtos = await _mediator.Send(new GetAllNotesQuery { BuildingExternalId = buildingId });
 
@@ -32,7 +32,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromQuery] string buildingId, [FromBody] NoteDTO request)
+        public async Task<IActionResult> Add([FromRoute] string buildingId, [FromBody] NoteDTO request)
         {
             await _mediator.Send(new CreateNoteCommand
             {
@@ -44,7 +44,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] NoteDTO request)
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] NoteDTO request)
         {
 
             await _mediator.Send(new UpdateNoteCommand
@@ -57,7 +57,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete([FromRoute] string id)
         {
             await _mediator.Send(new DeleteNoteCommand { NoteExternalId = id });
 

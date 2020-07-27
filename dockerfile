@@ -25,8 +25,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS runtime
 
 WORKDIR /app
 
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_URLS http://*:5000
+ENV ASPNETCORE_URLS=http://*:5000/
 
 COPY --from=build /app/CostTracker.Api/out /app
 

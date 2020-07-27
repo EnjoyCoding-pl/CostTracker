@@ -18,18 +18,20 @@ namespace CostTracker.Core.Queries.Part.GetAll
         {
             _context = context;
         }
-        public Task<List<PartDTO>> Handle(GetAllPartsQuery request, CancellationToken cancellationToken)
+        public async Task<List<PartDTO>> Handle(GetAllPartsQuery request, CancellationToken cancellationToken)
         {
-            return _context.Parts.Include(x => x.Building).Include(x => x.Costs).AsNoTracking().Where(x => x.Building.ExternalId == request.BuildingExternalId).Select(x => new PartDTO
+            var parts = await _context.Parts.Include(x => x.Building).Include(x => x.Costs).AsNoTracking().Where(x => x.Building.ExternalId == request.BuildingExternalId).ToListAsync();
+
+            return parts.Select(x => new PartDTO
             {
-                ExpectedCost = x.ExpectedCost,
+                Budget = x.Budget,
                 Id = x.ExternalId,
                 EndDate = x.EndDate,
                 Name = x.Name,
-                Reserve = x.Reserve,
+                BudgetReserve = x.BudgetReserve,
                 StartDate = x.StartDate,
                 TotalCost = x.TotalCost
-            }).ToListAsync();
+            }).ToList();
         }
     }
 }

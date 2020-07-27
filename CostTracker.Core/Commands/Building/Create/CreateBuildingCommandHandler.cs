@@ -18,7 +18,7 @@ namespace CostTracker.Core.Commands.Building.Create
         }
         public async Task<Unit> Handle(CreateBuildingCommand request, CancellationToken cancellationToken)
         {
-            var building = D.Building.Create(request.Name, request.Budget);
+            var building = D.Building.Create(request.Name);
 
             await _context.Buildings.AddAsync(building);
             await _context.SaveChangesAsync();

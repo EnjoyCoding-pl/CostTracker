@@ -30,7 +30,6 @@ namespace CostTracker.Core.Commands.Part.Create
 
             building.AddPart(part);
 
-            // await _context.Parts.AddAsync(part);
             await _context.SaveChangesAsync();
 
             return Unit.Value;

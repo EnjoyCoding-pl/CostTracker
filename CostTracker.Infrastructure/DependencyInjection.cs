@@ -21,5 +21,14 @@ namespace CostTracker.Infrastructure
             services.AddOptions<BlobStorageOptions>().Configure(options => configuration.GetSection(BlobStorageOptions.Section).Bind(options));
             services.AddScoped<IFileManager, BlobStorageFileManager>();
         }
+
+        public static void CreateMigrations(this IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+        }
     }
 }

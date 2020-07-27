@@ -25,14 +25,13 @@ namespace CostTracker.Core.Queries.GetBuilding
             .Include(x => x.Parts)
             .ThenInclude(x => x.Costs)
             .AsNoTracking()
-            .FirstAsync(x => x.ExternalId == request.ExternalId);
+            .FirstOrDefaultAsync(x => x.ExternalId == request.ExternalId);
 
             return new BuildingDetailDTO
             {
                 Name = building.Name,
-                Budget = building.Budget,
-                BudgetReserve = building.BudgetReserve,
-                ExpectedTotalCost = building.ExpectedTotalCost,
+                TotalBudgetReserve = building.TotalBudgetReserve,
+                TotalBudget = building.TotalBudget,
                 StartDate = building.StartDate,
                 EndDate = building.EndDate,
                 Notes = building.Notes.Select(x => new NoteDTO
@@ -43,10 +42,10 @@ namespace CostTracker.Core.Queries.GetBuilding
                 Parts = building.Parts.Select(x => new PartDTO
                 {
                     Id = x.ExternalId,
-                    ExpectedCost = x.ExpectedCost,
+                    Budget = x.Budget,
                     Name = x.Name,
                     EndDate = x.EndDate,
-                    Reserve = x.Reserve,
+                    BudgetReserve = x.BudgetReserve,
                     StartDate = x.StartDate,
                     TotalCost = x.TotalCost
                 }).ToList()

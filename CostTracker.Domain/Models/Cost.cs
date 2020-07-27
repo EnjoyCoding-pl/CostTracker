@@ -30,7 +30,12 @@ namespace CostTracker.Domain.Models
         public bool IsRefund { get; private set; }
         public Part Part { get; set; }
         public int PartId { get; set; }
-        public string InvoiceUrl { get; set; }
+        public string InvoiceUrl { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{Name}: {Amount}"; 
+        }
 
         public void SetInvoiceUrl(string url)
         {

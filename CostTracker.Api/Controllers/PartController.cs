@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CostTracker.Api.Controllers
 {
-    [Route("api/building/{buildingId}/[controller]")]
+    [Route("api/buildings/{buildingId}/parts")]
     [ApiController]
     public class PartController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PartDetailDTO>> Get(string id)
+        public async Task<ActionResult<PartDetailDTO>> Get([FromRoute] string id)
         {
             var dto = await _mediator.Send(new GetPartByIdQuery { PartExternalId = id });
 
@@ -33,7 +33,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PartDTO>>> GetAll(string buildingId)
+        public async Task<ActionResult<List<PartDTO>>> GetAll([FromRoute] string buildingId)
         {
             var dtos = await _mediator.Send(new GetAllPartsQuery { BuildingExternalId = buildingId });
 
@@ -41,13 +41,13 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(string buildingId, [FromBody] PartDTO request)
+        public async Task<IActionResult> Add([FromRoute] string buildingId, [FromBody] PartDTO request)
         {
             await _mediator.Send(new CreatePartCommand
             {
                 BuildingExternalId = buildingId,
                 Name = request.Name,
-                ExpectedCost = request.ExpectedCost,
+                ExpectedCost = request.Budget,
                 EndDate = request.EndDate,
                 StartDate = request.StartDate
             });
@@ -56,13 +56,14 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string partId, [FromBody] PartDTO request)
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] PartDTO request)
         {
-            await _mediator.Send(new UpdatePartCommand{
+            await _mediator.Send(new UpdatePartCommand
+            {
                 EndDate = request.EndDate,
-                ExpectedCost = request.ExpectedCost,
+                ExpectedCost = request.Budget,
                 Name = request.Name,
-                PartExternalId = partId,
+                PartExternalId = id,
                 StartDate = request.StartDate
             });
 
@@ -70,7 +71,7 @@ namespace CostTracker.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete([FromRoute] string id)
         {
             await _mediator.Send(new DeletePartCommand { PartExternalId = id });
 

@@ -19,18 +19,19 @@ namespace CostTracker.Core.Queries.GetBuildings
             _context = context;
         }
 
-        public Task<List<BuildingDTO>> Handle(GetAllBuildingsQuery request, CancellationToken cancellationToken)
+        public async Task<List<BuildingDTO>> Handle(GetAllBuildingsQuery request, CancellationToken cancellationToken)
         {
-            return _context.Buildings.Include(x => x.Parts).ThenInclude(x => x.Costs).AsNoTracking().Select(x => new BuildingDTO
+            var buildings = await _context.Buildings.Include(x => x.Parts).ThenInclude(x => x.Costs).AsNoTracking().ToListAsync();
+
+            return buildings.Select(x => new BuildingDTO
             {
                 Id = x.ExternalId,
                 Name = x.Name,
-                Budget = x.Budget,
-                BudgetReserve = x.BudgetReserve,
-                ExpectedTotalCost = x.ExpectedTotalCost,
+                TotalBudgetReserve = x.TotalBudgetReserve,
+                TotalBudget = x.TotalBudget,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate
-            }).ToListAsync();
+            }).ToList();
         }
     }
 }

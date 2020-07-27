@@ -18,7 +18,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- <DocumentationFile>bin/CostTrackerApi.xml</DocumentationFile> -->
   </PropertyGroup>
 
 

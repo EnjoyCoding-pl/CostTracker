@@ -26,7 +26,7 @@ namespace CostTracker.Core.Commands.Building.Update
             if (building == null)
                 throw new WrongDataException($"Building not exists");
 
-            building.Update(request.Name, request.Budget);
+            building.Update(request.Name);
 
             await _context.SaveChangesAsync();
 

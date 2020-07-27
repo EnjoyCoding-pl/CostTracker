@@ -11,9 +11,7 @@ namespace CostTracker.Infrastructure.Database
     public class ApplicationDbContext : DbContext, IApplicationDBContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-
-        }
+        {}
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Cost> Costs { get; set; }

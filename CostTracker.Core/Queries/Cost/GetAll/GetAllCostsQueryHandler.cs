@@ -18,9 +18,11 @@ namespace CostTracker.Core.Queries.Cost.GetAll
         {
             _context = context;
         }
-        public Task<List<CostDTO>> Handle(GetAllCostsQuery request, CancellationToken cancellationToken)
+        public async Task<List<CostDTO>> Handle(GetAllCostsQuery request, CancellationToken cancellationToken)
         {
-            return _context.Costs.Include(x => x.Part).AsNoTracking().Where(x => x.Part.ExternalId == request.PartExternalId).Select(x => new CostDTO
+            var costs = await _context.Costs.Include(x => x.Part).AsNoTracking().Where(x => x.Part.ExternalId == request.PartExternalId).ToListAsync();
+
+            return costs.Select(x => new CostDTO
             {
                 Amount = x.Amount,
                 Id = x.ExternalId,
@@ -28,7 +30,7 @@ namespace CostTracker.Core.Queries.Cost.GetAll
                 Name = x.Name,
                 IsRefund = x.IsRefund,
                 InvoiceUrl = x.InvoiceUrl
-            }).ToListAsync();
+            }).ToList();
         }
     }
 }

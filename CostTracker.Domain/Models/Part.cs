@@ -19,7 +19,7 @@ namespace CostTracker.Domain.Models
             return new Part
             {
                 Name = part.Name,
-                ExpectedCost = part.ExpectedCost,
+                Budget = part.ExpectedCost,
                 StartDate = part.StartDate,
                 EndDate = part.EndDate,
                 ExternalId = Guid.NewGuid().ToString().Replace("-", "")
@@ -28,14 +28,14 @@ namespace CostTracker.Domain.Models
         public int Id { get; private set; }
         public string ExternalId { get; private set; }
         public string Name { get; private set; }
-        public decimal ExpectedCost { get; private set; }
+        public decimal Budget { get; private set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int BuildingId { get; set; }
         public Building Building { get; set; }
         public List<Cost> Costs { get; }
         public decimal? TotalCost { get => Costs.Any() ? Costs.Sum(x => x.Amount) as decimal? : null; }
-        public decimal? Reserve { get => TotalCost.HasValue ? ExpectedCost - TotalCost.Value as decimal? : null; }
+        public decimal? BudgetReserve { get => TotalCost.HasValue ? Budget - TotalCost.Value as decimal? : null; }
 
         public void AddCost(Cost cost)
         {
@@ -55,7 +55,7 @@ namespace CostTracker.Domain.Models
             Name = part.Name;
             StartDate = part.StartDate;
             EndDate = part.EndDate;
-            ExpectedCost = part.ExpectedCost;
+            Budget = part.ExpectedCost;
         }
 
         private static void Validate(string Name, decimal ExpectedCost)

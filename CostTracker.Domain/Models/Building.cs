@@ -13,7 +13,7 @@ namespace CostTracker.Domain.Models
             Parts = new List<Part>();
             Notes = new List<Note>();
         }
-        public static Building Create(string name, decimal budget)
+        public static Building Create(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new WrongDataException($"Missing building name");
@@ -21,21 +21,19 @@ namespace CostTracker.Domain.Models
             return new Building
             {
                 Name = name,
-                Budget = budget,
                 ExternalId = Guid.NewGuid().ToString().Replace("-", "")
             };
         }
         public int Id { get; private set; }
         public string ExternalId { get; private set; }
         public string Name { get; private set; }
-        public decimal Budget { get; private set; }
         public List<Note> Notes { get; }
         public List<Part> Parts { get; }
         public DateTime? StartDate { get => Parts.Any() ? Parts.Min(x => x.StartDate) as DateTime? : null; }
         public DateTime? EndDate { get => Parts.Any() ? Parts.Max(x => x.EndDate) as DateTime? : null; }
-        public decimal? ExpectedTotalCost { get => Parts.Any() ? Parts.Sum(x => x.ExpectedCost) as decimal? : null; }
+        public decimal? TotalBudget { get => Parts.Any() ? Parts.Sum(x => x.Budget) as decimal? : null; }
         public decimal? TotalCosts { get => Parts.Any() ? Parts.Sum(x => x.TotalCost) as decimal? : null; }
-        public decimal? BudgetReserve { get => TotalCosts.HasValue ? (Budget - TotalCosts.Value) as decimal? : null; }
+        public decimal? TotalBudgetReserve { get => Parts.Any() ? Parts.Sum(x => x.BudgetReserve) as decimal? : null; }
 
         public void AddNote(Note note)
         {
@@ -52,10 +50,9 @@ namespace CostTracker.Domain.Models
 
             Parts.Add(part);
         }
-        public void Update(string name, decimal budget)
+        public void Update(string name)
         {
             Name = name;
-            Budget = budget;
         }
     }
 }

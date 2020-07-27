@@ -19,18 +19,20 @@ namespace CostTracker.Core.Queries.Part.GetById
             _context = context;
         }
 
-        public Task<PartDetailDTO> Handle(GetPartByIdQuery request, CancellationToken cancellationToken)
+        public async Task<PartDetailDTO> Handle(GetPartByIdQuery request, CancellationToken cancellationToken)
         {
-            return _context.Parts.Include(x => x.Costs).AsNoTracking().Where(x=>x.ExternalId == request.PartExternalId).Select(x => new PartDetailDTO
+            var part = await _context.Parts.Include(x => x.Costs).AsNoTracking().Where(x => x.ExternalId == request.PartExternalId).FirstOrDefaultAsync();
+
+            return new PartDetailDTO
             {
-                ExpectedCost = x.ExpectedCost,
-                Id = x.ExternalId,
-                EndDate = x.EndDate,
-                Name = x.Name,
-                Reserve = x.Reserve,
-                StartDate = x.StartDate,
-                TotalCost = x.TotalCost,
-                Costs = x.Costs.Select(c => new CostDTO
+                Budget = part.Budget,
+                Id = part.ExternalId,
+                EndDate = part.EndDate,
+                Name = part.Name,
+                BudgetReserve = part.BudgetReserve,
+                StartDate = part.StartDate,
+                TotalCost = part.TotalCost,
+                Costs = part.Costs.Select(c => new CostDTO
                 {
                     Id = c.ExternalId,
                     Amount = c.Amount,
@@ -39,7 +41,7 @@ namespace CostTracker.Core.Queries.Part.GetById
                     VatRate = c.VatRate,
                     InvoiceUrl = c.InvoiceUrl
                 }).ToList()
-            }).FirstOrDefaultAsync();
+            };
         }
     }
 }

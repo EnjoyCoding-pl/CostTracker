@@ -19,13 +19,16 @@ namespace CostTracker.Core.Queries.Cost.GetAll
         {
             _context = context;
         }
-        
-        public Task<List<NoteDTO>> Handle(GetAllNotesQuery request, CancellationToken cancellationToken)
+
+        public async Task<List<NoteDTO>> Handle(GetAllNotesQuery request, CancellationToken cancellationToken)
         {
-            return _context.Notes.Include(x=>x.Building).AsNoTracking().Where(x=>x.Building.ExternalId == request.BuildingExternalId).Select(x=>new NoteDTO{
+            var notes = await _context.Notes.Include(x => x.Building).AsNoTracking().Where(x => x.Building.ExternalId == request.BuildingExternalId).ToListAsync();
+
+            return notes.Select(x => new NoteDTO
+            {
                 Id = x.ExternalId,
                 Text = x.Text
-            }).ToListAsync();
+            }).ToList();
         }
     }
 }

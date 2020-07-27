@@ -10,6 +10,5 @@ namespace CostTracker.Core.Commands.Building.Create
     public class CreateBuildingCommand : IRequest
     {
         public string Name { get; set; }
-        public decimal Budget { get; set; }
     }
 }

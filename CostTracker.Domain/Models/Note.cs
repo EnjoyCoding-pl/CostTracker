@@ -18,12 +18,8 @@ namespace CostTracker.Domain.Models
         public int Id { get; set; }
         public string ExternalId { get; private set; }
         public string Text { get; private set; }
-        public bool IsRemoved { get; private set; }
-
         public int BuildingId { get; set; }
-
         public Building Building { get; set; }
-
         public void UpdateText(string text)
         {
             Text = text;

@@ -23,13 +23,16 @@ namespace CostTracker.Core.Commands.Cost.Create
         public async Task<Unit> Handle(CreateCostCommand request, CancellationToken cancellationToken)
         {
             var cost = D.Cost.Create(request.Name, request.Amount, request.VatRate);
-            var part = await _context.Parts.FirstOrDefaultAsync(x => x.ExternalId == request.PartExternalId);
+            var part = await _context.Parts.Include(x => x.Costs).FirstOrDefaultAsync(x => x.ExternalId == request.PartExternalId);
 
             part.AddCost(cost);
 
-            var url = await _fileManager.UploadAsync(request.File, request.FileName);
+            if (request.File != null)
+            {
+                var url = await _fileManager.UploadAsync(request.File, request.FileName);
 
-            cost.SetInvoiceUrl(url);
+                cost.SetInvoiceUrl(url);
+            }
 
             await _context.SaveChangesAsync();
 
