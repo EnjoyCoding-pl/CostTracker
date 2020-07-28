@@ -47,7 +47,7 @@ namespace CostTracker.Api.Controllers
             {
                 BuildingExternalId = buildingId,
                 Name = request.Name,
-                ExpectedCost = request.Budget,
+                Budget = request.Budget,
                 EndDate = request.EndDate,
                 StartDate = request.StartDate
             });
@@ -61,7 +61,7 @@ namespace CostTracker.Api.Controllers
             await _mediator.Send(new UpdatePartCommand
             {
                 EndDate = request.EndDate,
-                ExpectedCost = request.Budget,
+                Budget = request.Budget,
                 Name = request.Name,
                 PartExternalId = id,
                 StartDate = request.StartDate

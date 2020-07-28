@@ -16,7 +16,7 @@ namespace CostTracker.Domain.Models
         public static Building Create(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new WrongDataException($"Missing building name");
+                throw new DataException($"Missing building name");
 
             return new Building
             {
@@ -34,19 +34,15 @@ namespace CostTracker.Domain.Models
         public decimal? TotalBudget { get => Parts.Any() ? Parts.Sum(x => x.Budget) as decimal? : null; }
         public decimal? TotalCosts { get => Parts.Any() ? Parts.Sum(x => x.TotalCost) as decimal? : null; }
         public decimal? TotalBudgetReserve { get => Parts.Any() ? Parts.Sum(x => x.BudgetReserve) as decimal? : null; }
-
         public void AddNote(Note note)
         {
-            note.BuildingId = Id;
-            note.Building = this;
+            note.SetBuilding(this);
 
             Notes.Add(note);
         }
-
         public void AddPart(Part part)
         {
-            part.BuildingId = Id;
-            part.Building = this;
+            part.SetBuilding(this);
 
             Parts.Add(part);
         }

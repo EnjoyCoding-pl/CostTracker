@@ -27,7 +27,7 @@ namespace CostTracker.Core.Commands.Note.Create
             var building = await _context.Buildings.FirstOrDefaultAsync(x => x.ExternalId == request.BuildingExternalId);
 
             if (building == null)
-                throw new WrongDataException("Building not exists");
+                throw new DataException("Building not exists");
 
             building.AddNote(note);
 

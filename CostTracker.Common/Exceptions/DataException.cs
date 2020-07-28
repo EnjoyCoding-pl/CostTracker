@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CostTracker.Common.Exceptions
 {
-    public class WrongDataException : Exception
+    public class DataException : Exception
     {
-        public WrongDataException(string message) : base(message)
+        public DataException(string message) : base(message)
         {
         }
     }

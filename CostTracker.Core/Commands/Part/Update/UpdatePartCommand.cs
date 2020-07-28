@@ -10,7 +10,7 @@ namespace CostTracker.Core.Commands.Part.Update
     {
         public string PartExternalId { get; set; }
         public string Name { get; set; }
-        public decimal ExpectedCost { get; set; }
+        public decimal Budget { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

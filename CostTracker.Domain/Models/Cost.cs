@@ -11,7 +11,7 @@ namespace CostTracker.Domain.Models
         public static Cost Create(string name, decimal amount, int vatRate)
         {
             if (string.IsNullOrEmpty(name))
-                throw new WrongDataException("Missing cost name");
+                throw new DataException("Missing cost name");
 
             return new Cost
             {
@@ -22,24 +22,23 @@ namespace CostTracker.Domain.Models
                 ExternalId = Guid.NewGuid().ToString().Replace("-", "")
             };
         }
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string ExternalId { get; private set; }
         public string Name { get; private set; }
         public decimal Amount { get; private set; }
         public int VatRate { get; private set; }
         public bool IsRefund { get; private set; }
-        public Part Part { get; set; }
-        public int PartId { get; set; }
+        public Part Part { get; private set; }
+        public int PartId { get; private set; }
         public string InvoiceUrl { get; private set; }
-
-        public override string ToString()
-        {
-            return $"{Name}: {Amount}"; 
-        }
-
         public void SetInvoiceUrl(string url)
         {
             InvoiceUrl = url;
+        }
+        public void SetPart(Part part)
+        {
+            Part = part;
+            PartId = part.Id;
         }
     }
 }

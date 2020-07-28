@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CostTracker.Core.Interfaces;
 using CostTracker.Domain.Models;
 using Microsoft.EntityFrameworkCore;

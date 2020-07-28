@@ -24,9 +24,9 @@ namespace CostTracker.Core.Commands.Part.Update
             var part = await _context.Parts.FirstOrDefaultAsync(x => x.ExternalId == request.PartExternalId);
 
             if (part == null)
-                throw new WrongDataException("Part doesn't exists");
+                throw new DataException("Part doesn't exists");
 
-            part.Update((request.Name, request.ExpectedCost, request.StartDate, request.EndDate));
+            part.Update((request.Name, request.Budget, request.StartDate, request.EndDate));
 
             await _context.SaveChangesAsync();
 

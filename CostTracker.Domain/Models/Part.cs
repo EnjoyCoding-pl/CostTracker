@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CostTracker.Common.Exceptions;
 
 namespace CostTracker.Domain.Models
@@ -29,25 +28,27 @@ namespace CostTracker.Domain.Models
         public string ExternalId { get; private set; }
         public string Name { get; private set; }
         public decimal Budget { get; private set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int BuildingId { get; set; }
-        public Building Building { get; set; }
+        public DateTime StartDate { get; private set; }
+        public DateTime EndDate { get; private set; }
+        public int BuildingId { get; private set; }
+        public Building Building { get; private set; }
         public List<Cost> Costs { get; }
         public decimal? TotalCost { get => Costs.Any() ? Costs.Sum(x => x.Amount) as decimal? : null; }
         public decimal? BudgetReserve { get => TotalCost.HasValue ? Budget - TotalCost.Value as decimal? : null; }
-
+        public void SetBuilding(Building building)
+        {
+            Building = building;
+            BuildingId = building.Id;
+        }
         public void AddCost(Cost cost)
         {
             if (Costs.Sum(x => x.Amount) + cost.Amount < 0)
-                throw new WrongDataException("Refund can't exceed cost");
+                throw new DataException("Refund can't exceed cost");
 
-            cost.PartId = Id;
-            cost.Part = this;
+            cost.SetPart(this);
 
             this.Costs.Add(cost);
         }
-
         public void Update((string Name, decimal ExpectedCost, DateTime StartDate, DateTime EndDate) part)
         {
             Validate(part.Name, part.ExpectedCost);
@@ -57,14 +58,13 @@ namespace CostTracker.Domain.Models
             EndDate = part.EndDate;
             Budget = part.ExpectedCost;
         }
-
         private static void Validate(string Name, decimal ExpectedCost)
         {
             if (ExpectedCost < 0)
-                throw new WrongDataException("Part expected cost can't be negative");
+                throw new DataException("Part expected cost can't be negative");
 
             if (string.IsNullOrEmpty(Name))
-                throw new WrongDataException("Missing part name");
+                throw new DataException("Missing part name");
         }
     }
 }

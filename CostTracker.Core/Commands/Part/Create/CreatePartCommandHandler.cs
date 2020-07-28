@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CostTracker.Common.Exceptions;
@@ -21,12 +18,12 @@ namespace CostTracker.Core.Commands.Part.Create
         }
         public async Task<Unit> Handle(CreatePartCommand request, CancellationToken cancellationToken)
         {
-            var part = D.Part.Create((request.Name, request.ExpectedCost,request.StartDate,request.EndDate));
+            var part = D.Part.Create((request.Name, request.Budget, request.StartDate, request.EndDate));
 
             var building = await _context.Buildings.Include(x => x.Parts).FirstOrDefaultAsync(x => x.ExternalId == request.BuildingExternalId);
 
             if (building == null)
-                throw new WrongDataException("Missing building");
+                throw new DataException("Missing building");
 
             building.AddPart(part);
 

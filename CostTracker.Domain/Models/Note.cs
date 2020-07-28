@@ -18,11 +18,16 @@ namespace CostTracker.Domain.Models
         public int Id { get; set; }
         public string ExternalId { get; private set; }
         public string Text { get; private set; }
-        public int BuildingId { get; set; }
-        public Building Building { get; set; }
+        public int BuildingId { get; private set; }
+        public Building Building { get; private set; }
         public void UpdateText(string text)
         {
             Text = text;
+        }
+        public void SetBuilding(Building building)
+        {
+            Building = building;
+            BuildingId = building.Id;
         }
     }
 }

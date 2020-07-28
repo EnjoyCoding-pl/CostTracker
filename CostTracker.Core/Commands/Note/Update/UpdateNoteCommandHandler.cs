@@ -23,7 +23,7 @@ namespace CostTracker.Core.Commands.Note.Update
         {
             var note = await _context.Notes.FirstOrDefaultAsync(x => x.ExternalId == request.NoteExternalId);
             if (note == null)
-                throw new WrongDataException("Note doesn't exists");
+                throw new DataException("Note doesn't exists");
 
             note.UpdateText(request.Text);
 
