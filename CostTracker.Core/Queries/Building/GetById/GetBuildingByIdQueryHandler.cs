@@ -29,6 +29,7 @@ namespace CostTracker.Core.Queries.GetBuilding
 
             return new BuildingDetailDTO
             {
+                Id = building.ExternalId,
                 Name = building.Name,
                 TotalBudgetReserve = building.TotalBudgetReserve,
                 TotalBudget = building.TotalBudget,

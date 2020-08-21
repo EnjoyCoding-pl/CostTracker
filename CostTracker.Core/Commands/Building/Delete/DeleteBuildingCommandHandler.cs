@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CostTracker.Core.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CostTracker.Core.Commands.Building.Delete
 {
@@ -17,7 +18,7 @@ namespace CostTracker.Core.Commands.Building.Delete
         }
         public async Task<Unit> Handle(DeleteBuildingCommand request, CancellationToken cancellationToken)
         {
-            var building = await _context.Buildings.FindAsync(request.BuildingExternalId);
+            var building = await _context.Buildings.FirstOrDefaultAsync(x => string.Equals(x.ExternalId, request.BuildingExternalId));
 
             if (building != null)
             {
